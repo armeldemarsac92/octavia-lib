@@ -147,7 +147,8 @@ class Listener(BaseDataModel):
                  allowed_cidrs=Unset, tls_versions=Unset, tls_ciphers=Unset,
                  alpn_protocols=Unset, hsts_max_age=Unset,
                  hsts_include_subdomains=Unset, hsts_preload=Unset,
-                 default_http_response=Unset, https_virtual_hosts=Unset):
+                 default_http_response=Unset, https_virtual_hosts=Unset,
+                 tcp_tls_termination=Unset):
 
         self.admin_state_up = admin_state_up
         self.connection_limit = connection_limit
@@ -157,6 +158,7 @@ class Listener(BaseDataModel):
         self.https_virtual_hosts = https_virtual_hosts
         self.default_tls_container_data = default_tls_container_data
         self.default_tls_container_ref = default_tls_container_ref
+        self.tcp_tls_termination = tcp_tls_termination
         self.description = description
         self.insert_headers = insert_headers
         self.l7policies = l7policies
