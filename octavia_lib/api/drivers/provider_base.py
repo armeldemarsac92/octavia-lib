@@ -22,6 +22,14 @@ class ProviderDriver():
     # name is for internal Octavia use and should not be used by drivers
     name = None
 
+    # Drivers opt in when they implement listener defaults and L7 fixed
+    # responses, including for load balancers created with nested resources.
+    supports_fixed_http_responses = False
+
+    # Drivers opt in when they implement ordered weighted destinations,
+    # including pools and fixed HTTP responses.
+    supports_weighted_targets = False
+
     # Load Balancer
     def create_vip_port(self, loadbalancer_id, project_id, vip_dictionary,
                         additional_vip_dicts):
