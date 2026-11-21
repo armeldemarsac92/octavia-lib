@@ -146,12 +146,14 @@ class Listener(BaseDataModel):
                  client_crl_container_data=Unset, project_id=Unset,
                  allowed_cidrs=Unset, tls_versions=Unset, tls_ciphers=Unset,
                  alpn_protocols=Unset, hsts_max_age=Unset,
-                 hsts_include_subdomains=Unset, hsts_preload=Unset):
+                 hsts_include_subdomains=Unset, hsts_preload=Unset,
+                 default_http_response=Unset):
 
         self.admin_state_up = admin_state_up
         self.connection_limit = connection_limit
         self.default_pool = default_pool
         self.default_pool_id = default_pool_id
+        self.default_http_response = default_http_response
         self.default_tls_container_data = default_tls_container_data
         self.default_tls_container_ref = default_tls_container_ref
         self.description = description
@@ -293,9 +295,12 @@ class L7Policy(BaseDataModel):
                  l7policy_id=Unset, listener_id=Unset, name=Unset,
                  position=Unset, redirect_pool_id=Unset, redirect_url=Unset,
                  rules=Unset, redirect_prefix=Unset, redirect_http_code=Unset,
-                 project_id=Unset):
+                 project_id=Unset, fixed_response=Unset,
+                 targets=Unset):
 
         self.action = action
+        self.fixed_response = fixed_response
+        self.targets = targets
         self.admin_state_up = admin_state_up
         self.description = description
         self.l7policy_id = l7policy_id
@@ -308,6 +313,18 @@ class L7Policy(BaseDataModel):
         self.redirect_prefix = redirect_prefix
         self.redirect_http_code = redirect_http_code
         self.project_id = project_id
+
+    def to_dict(self, calling_classes=None, recurse=False,
+                render_unsets=False, **kwargs):
+        data = super().to_dict(calling_classes=calling_classes,
+                               recurse=recurse, render_unsets=render_unsets,
+                               **kwargs)
+        # Targets are JSON values, so they also belong in shallow RPC payloads.
+        if isinstance(self.targets, UnsetType):
+            data.pop('targets', None)
+        elif kwargs.get('targets', True):
+            data['targets'] = self.targets
+        return data
 
     def __str__(self):
         return (f"L7Policy(l7policy_id="
