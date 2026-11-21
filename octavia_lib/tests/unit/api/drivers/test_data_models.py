@@ -426,6 +426,16 @@ class TestProviderDataModels(base.TestCase):
 
         self.assertEqual(self.ref_lb_dict, ref_lb_converted_to_dict)
 
+    def test_l7policy_target_payload_preserves_order_and_explicit_clear(self):
+        targets = [{'weight': 3, 'pool_id': self.pool_id},
+                   {'weight': 1, 'fixed_response': {'status_code': 500}}]
+        policy = data_models.L7Policy(targets=targets)
+        self.assertEqual({'targets': targets}, policy.to_dict())
+        self.assertEqual({'targets': targets}, policy.to_dict(recurse=True))
+        self.assertEqual(
+            {'targets': None}, data_models.L7Policy(targets=None).to_dict())
+        self.assertNotIn('targets', data_models.L7Policy().to_dict())
+
     def test_to_dict_partial(self):
         ref_lb = data_models.LoadBalancer(loadbalancer_id=self.loadbalancer_id)
         ref_lb_dict = {'loadbalancer_id': self.loadbalancer_id}
@@ -492,6 +502,9 @@ class TestProviderDataModels(base.TestCase):
         ref_lb_dict_with_listener['pools'] = None
         ref_lb_dict_with_listener['name'] = None
         ref_lb_dict_with_listener['additional_vips'] = None
+        listener = ref_lb_dict_with_listener['listeners'][0]
+        listener['default_http_response'] = None
+        listener['l7policies'][0]['fixed_response'] = None
 
         ref_lb_converted_to_dict = ref_lb.to_dict(recurse=True,
                                                   render_unsets=True)
