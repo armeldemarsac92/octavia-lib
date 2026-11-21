@@ -30,6 +30,13 @@ class TestProviderDataModels(base.TestCase):
             self.assertEqual(fields,
                              data_models.Pool.from_dict(fields).to_dict())
 
+    def test_pool_backend_tls_hostname_update(self):
+        self.assertNotIn('backend_tls_hostname', data_models.Pool().to_dict())
+        for value in ('backend.example.test', None):
+            fields = {'backend_tls_hostname': value}
+            self.assertEqual(fields,
+                             data_models.Pool.from_dict(fields).to_dict())
+
     def setUp(self):
         super().setUp()
 
