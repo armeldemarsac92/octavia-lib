@@ -436,6 +436,17 @@ class TestProviderDataModels(base.TestCase):
             {'targets': None}, data_models.L7Policy(targets=None).to_dict())
         self.assertNotIn('targets', data_models.L7Policy().to_dict())
 
+    def test_l7policy_request_header_operations_round_trip(self):
+        operations = [{'operation': 'SET', 'name': 'x-tenant', 'value': ''},
+                      {'operation': 'REMOVE', 'name': 'x-old'}]
+        for value in (operations, []):
+            fields = {'request_header_operations': value}
+            policy = data_models.L7Policy.from_dict(fields)
+            self.assertEqual(fields, policy.to_dict())
+            self.assertEqual(fields, policy.to_dict(recurse=True))
+        self.assertNotIn('request_header_operations',
+                         data_models.L7Policy().to_dict())
+
     def test_to_dict_partial(self):
         ref_lb = data_models.LoadBalancer(loadbalancer_id=self.loadbalancer_id)
         ref_lb_dict = {'loadbalancer_id': self.loadbalancer_id}

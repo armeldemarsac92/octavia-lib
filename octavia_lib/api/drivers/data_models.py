@@ -296,11 +296,12 @@ class L7Policy(BaseDataModel):
                  position=Unset, redirect_pool_id=Unset, redirect_url=Unset,
                  rules=Unset, redirect_prefix=Unset, redirect_http_code=Unset,
                  project_id=Unset, fixed_response=Unset,
-                 targets=Unset):
+                 targets=Unset, request_header_operations=Unset):
 
         self.action = action
         self.fixed_response = fixed_response
         self.targets = targets
+        self.request_header_operations = request_header_operations
         self.admin_state_up = admin_state_up
         self.description = description
         self.l7policy_id = l7policy_id
@@ -319,11 +320,14 @@ class L7Policy(BaseDataModel):
         data = super().to_dict(calling_classes=calling_classes,
                                recurse=recurse, render_unsets=render_unsets,
                                **kwargs)
-        # Targets are JSON values, so they also belong in shallow RPC payloads.
-        if isinstance(self.targets, UnsetType):
-            data.pop('targets', None)
-        elif kwargs.get('targets', True):
-            data['targets'] = self.targets
+        # These JSON lists also belong in shallow RPC payloads. An empty
+        # request header operation list explicitly clears stored operations.
+        for attribute in ('targets', 'request_header_operations'):
+            value = getattr(self, attribute)
+            if isinstance(value, UnsetType):
+                data.pop(attribute, None)
+            elif kwargs.get(attribute, True):
+                data[attribute] = value
         return data
 
     def __str__(self):
