@@ -29,6 +29,7 @@ class ProviderDriver():
     # Drivers opt in when they implement ordered weighted destinations,
     # including pools and fixed HTTP responses.
     supports_weighted_targets = False
+    supports_request_header_operations = False
 
     # Load Balancer
     def create_vip_port(self, loadbalancer_id, project_id, vip_dictionary,
