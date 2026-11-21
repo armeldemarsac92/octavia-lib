@@ -23,6 +23,13 @@ from octavia_lib.tests.unit import base
 
 class TestProviderDataModels(base.TestCase):
 
+    def test_pool_backend_h2c_update(self):
+        self.assertNotIn('backend_h2c', data_models.Pool().to_dict())
+        for value in (True, False):
+            fields = {'backend_h2c': value}
+            self.assertEqual(fields,
+                             data_models.Pool.from_dict(fields).to_dict())
+
     def setUp(self):
         super().setUp()
 
