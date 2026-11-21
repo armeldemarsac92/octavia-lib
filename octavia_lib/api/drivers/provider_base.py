@@ -31,6 +31,9 @@ class ProviderDriver():
     supports_weighted_targets = False
     supports_request_header_operations = False
 
+    # Send HTTP/2 prior knowledge on cleartext HTTP pool member connections.
+    supports_backend_h2c = False
+
     # Load Balancer
     def create_vip_port(self, loadbalancer_id, project_id, vip_dictionary,
                         additional_vip_dicts):
