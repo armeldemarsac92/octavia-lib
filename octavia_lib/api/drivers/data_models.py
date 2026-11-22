@@ -315,7 +315,7 @@ class L7Policy(BaseDataModel):
                  project_id=Unset, fixed_response=Unset,
                  targets=Unset, request_header_operations=Unset,
                  https_listener_hostname=Unset,
-                 response_header_operations=Unset):
+                 response_header_operations=Unset, redirect_request=Unset):
 
         self.action = action
         self.fixed_response = fixed_response
@@ -333,6 +333,7 @@ class L7Policy(BaseDataModel):
         self.redirect_url = redirect_url
         self.rules = rules
         self.redirect_prefix = redirect_prefix
+        self.redirect_request = redirect_request
         self.redirect_http_code = redirect_http_code
         self.project_id = project_id
 
@@ -341,11 +342,10 @@ class L7Policy(BaseDataModel):
         data = super().to_dict(calling_classes=calling_classes,
                                recurse=recurse, render_unsets=render_unsets,
                                **kwargs)
-        # Preserve supplied JSON lists in shallow RPC payloads, including
-        # empty operation lists that clear stored operations.
+        # Preserve supplied structured fields in shallow RPC payloads.
         for attribute in ('targets', 'request_header_operations',
                           'response_header_operations',
-                          'https_listener_hostname'):
+                          'https_listener_hostname', 'redirect_request'):
             value = getattr(self, attribute)
             if isinstance(value, UnsetType):
                 data.pop(attribute, None)
