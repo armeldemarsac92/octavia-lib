@@ -440,6 +440,18 @@ class TestProviderDataModels(base.TestCase):
 
         self.assertEqual(self.ref_lb_dict, ref_lb_converted_to_dict)
 
+    def test_https_listener_isolation_payload_round_trip(self):
+        hosts = ['*.example.test', 'a.example.test']
+        listener = data_models.Listener(https_virtual_hosts=hosts)
+        policy = data_models.L7Policy(https_listener_hostname=hosts[0])
+        self.assertEqual({'https_virtual_hosts': hosts}, listener.to_dict())
+        self.assertEqual({'https_listener_hostname': hosts[0]},
+                         policy.to_dict())
+        self.assertEqual(listener, data_models.Listener.from_dict(
+            listener.to_dict()))
+        self.assertEqual(policy, data_models.L7Policy.from_dict(
+            policy.to_dict()))
+
     def test_l7policy_target_payload_preserves_order_and_explicit_clear(self):
         targets = [{'weight': 3, 'pool_id': self.pool_id},
                    {'weight': 1, 'fixed_response': {'status_code': 500}}]
