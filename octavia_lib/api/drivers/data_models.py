@@ -315,7 +315,8 @@ class L7Policy(BaseDataModel):
                  project_id=Unset, fixed_response=Unset,
                  targets=Unset, request_header_operations=Unset,
                  https_listener_hostname=Unset,
-                 response_header_operations=Unset, redirect_request=Unset):
+                 response_header_operations=Unset, redirect_request=Unset,
+                 request_url_rewrite=Unset):
 
         self.action = action
         self.fixed_response = fixed_response
@@ -334,6 +335,7 @@ class L7Policy(BaseDataModel):
         self.rules = rules
         self.redirect_prefix = redirect_prefix
         self.redirect_request = redirect_request
+        self.request_url_rewrite = request_url_rewrite
         self.redirect_http_code = redirect_http_code
         self.project_id = project_id
 
@@ -345,7 +347,8 @@ class L7Policy(BaseDataModel):
         # Preserve supplied structured fields in shallow RPC payloads.
         for attribute in ('targets', 'request_header_operations',
                           'response_header_operations',
-                          'https_listener_hostname', 'redirect_request'):
+                          'https_listener_hostname', 'redirect_request',
+                          'request_url_rewrite'):
             value = getattr(self, attribute)
             if isinstance(value, UnsetType):
                 data.pop(attribute, None)
