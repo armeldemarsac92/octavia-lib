@@ -30,6 +30,14 @@ class TestProviderDataModels(base.TestCase):
             self.assertEqual(fields,
                              data_models.Pool.from_dict(fields).to_dict())
 
+    def test_pool_backend_tls_require_h2_update(self):
+        self.assertNotIn('backend_tls_require_h2',
+                         data_models.Pool().to_dict())
+        for value in (True, False):
+            fields = {'backend_tls_require_h2': value}
+            self.assertEqual(fields,
+                             data_models.Pool.from_dict(fields).to_dict())
+
     def test_listener_tcp_tls_termination(self):
         self.assertNotIn('tcp_tls_termination',
                          data_models.Listener().to_dict())
