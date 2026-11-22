@@ -314,12 +314,14 @@ class L7Policy(BaseDataModel):
                  rules=Unset, redirect_prefix=Unset, redirect_http_code=Unset,
                  project_id=Unset, fixed_response=Unset,
                  targets=Unset, request_header_operations=Unset,
-                 https_listener_hostname=Unset):
+                 https_listener_hostname=Unset,
+                 response_header_operations=Unset):
 
         self.action = action
         self.fixed_response = fixed_response
         self.targets = targets
         self.request_header_operations = request_header_operations
+        self.response_header_operations = response_header_operations
         self.https_listener_hostname = https_listener_hostname
         self.admin_state_up = admin_state_up
         self.description = description
@@ -342,6 +344,7 @@ class L7Policy(BaseDataModel):
         # Preserve supplied JSON lists in shallow RPC payloads, including
         # empty operation lists that clear stored operations.
         for attribute in ('targets', 'request_header_operations',
+                          'response_header_operations',
                           'https_listener_hostname'):
             value = getattr(self, attribute)
             if isinstance(value, UnsetType):

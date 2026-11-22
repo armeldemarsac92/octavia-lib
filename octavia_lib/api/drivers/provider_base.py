@@ -30,6 +30,7 @@ class ProviderDriver():
     # including pools and fixed HTTP responses.
     supports_weighted_targets = False
     supports_request_header_operations = False
+    supports_response_header_operations = False
 
     # Send HTTP/2 prior knowledge on cleartext HTTP pool member connections.
     supports_backend_h2c = False
