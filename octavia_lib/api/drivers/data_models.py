@@ -147,13 +147,14 @@ class Listener(BaseDataModel):
                  allowed_cidrs=Unset, tls_versions=Unset, tls_ciphers=Unset,
                  alpn_protocols=Unset, hsts_max_age=Unset,
                  hsts_include_subdomains=Unset, hsts_preload=Unset,
-                 default_http_response=Unset):
+                 default_http_response=Unset, https_virtual_hosts=Unset):
 
         self.admin_state_up = admin_state_up
         self.connection_limit = connection_limit
         self.default_pool = default_pool
         self.default_pool_id = default_pool_id
         self.default_http_response = default_http_response
+        self.https_virtual_hosts = https_virtual_hosts
         self.default_tls_container_data = default_tls_container_data
         self.default_tls_container_ref = default_tls_container_ref
         self.description = description
@@ -184,6 +185,17 @@ class Listener(BaseDataModel):
         self.hsts_include_subdomains: tp.Union[bool, UnsetType] = (
             hsts_include_subdomains)
         self.hsts_preload: tp.Union[bool, UnsetType] = hsts_preload
+
+    def to_dict(self, calling_classes=None, recurse=False,
+                render_unsets=False, **kwargs):
+        data = super().to_dict(calling_classes=calling_classes,
+                               recurse=recurse, render_unsets=render_unsets,
+                               **kwargs)
+        if isinstance(self.https_virtual_hosts, UnsetType):
+            data.pop('https_virtual_hosts', None)
+        elif kwargs.get('https_virtual_hosts', True):
+            data['https_virtual_hosts'] = self.https_virtual_hosts
+        return data
 
     def __str__(self):
         return (f"Listener(listener_id="
@@ -299,12 +311,14 @@ class L7Policy(BaseDataModel):
                  position=Unset, redirect_pool_id=Unset, redirect_url=Unset,
                  rules=Unset, redirect_prefix=Unset, redirect_http_code=Unset,
                  project_id=Unset, fixed_response=Unset,
-                 targets=Unset, request_header_operations=Unset):
+                 targets=Unset, request_header_operations=Unset,
+                 https_listener_hostname=Unset):
 
         self.action = action
         self.fixed_response = fixed_response
         self.targets = targets
         self.request_header_operations = request_header_operations
+        self.https_listener_hostname = https_listener_hostname
         self.admin_state_up = admin_state_up
         self.description = description
         self.l7policy_id = l7policy_id
@@ -323,9 +337,10 @@ class L7Policy(BaseDataModel):
         data = super().to_dict(calling_classes=calling_classes,
                                recurse=recurse, render_unsets=render_unsets,
                                **kwargs)
-        # These JSON lists also belong in shallow RPC payloads. An empty
-        # request header operation list explicitly clears stored operations.
-        for attribute in ('targets', 'request_header_operations'):
+        # Preserve supplied JSON lists in shallow RPC payloads, including
+        # empty operation lists that clear stored operations.
+        for attribute in ('targets', 'request_header_operations',
+                          'https_listener_hostname'):
             value = getattr(self, attribute)
             if isinstance(value, UnsetType):
                 data.pop(attribute, None)
