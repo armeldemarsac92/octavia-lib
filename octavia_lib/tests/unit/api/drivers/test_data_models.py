@@ -487,6 +487,18 @@ class TestProviderDataModels(base.TestCase):
                     self.assertEqual(fields, policy.to_dict(recurse=True))
             self.assertNotIn(attribute, data_models.L7Policy().to_dict())
 
+    def test_l7policy_request_redirect_round_trip(self):
+        fields = {'redirect_request': {
+            'scheme': 'https', 'port': 443,
+            'replace_prefix': {'match': '/old', 'replacement': ''}}}
+        policy = data_models.L7Policy.from_dict(fields)
+        self.assertEqual(fields, policy.to_dict())
+        self.assertEqual(fields, policy.to_dict(recurse=True))
+        self.assertEqual({'redirect_request': None},
+                         data_models.L7Policy(redirect_request=None).to_dict())
+        self.assertNotIn('redirect_request', data_models.L7Policy().to_dict(
+            render_unsets=True))
+
     def test_to_dict_partial(self):
         ref_lb = data_models.LoadBalancer(loadbalancer_id=self.loadbalancer_id)
         ref_lb_dict = {'loadbalancer_id': self.loadbalancer_id}
