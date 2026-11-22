@@ -33,6 +33,7 @@ class ProviderDriver():
     supports_response_header_operations = False
     supports_http_request_redirect = False
     supports_request_url_rewrite = False
+    supports_request_cors = False
 
     # Send HTTP/2 prior knowledge on cleartext HTTP pool member connections.
     supports_backend_h2c = False

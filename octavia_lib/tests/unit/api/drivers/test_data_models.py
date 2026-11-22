@@ -512,6 +512,20 @@ class TestProviderDataModels(base.TestCase):
         self.assertNotIn(field, data_models.L7Policy().to_dict(
             render_unsets=True))
 
+    def test_l7policy_cors_payload_distinguishes_omission_and_removal(self):
+        self.assertNotIn('request_cors', data_models.L7Policy().to_dict(
+            render_unsets=True))
+        for cors in (None, {}, {'allow_origins': ['https://*.example.org'],
+                                'allow_credentials': True,
+                                'allow_headers': ['x-request-id']}):
+            with self.subTest(cors=cors):
+                payload = {'request_cors': cors}
+                policy = data_models.L7Policy.from_dict(payload)
+                self.assertEqual(payload, policy.to_dict())
+                self.assertEqual(payload, policy.to_dict(recurse=True))
+                self.assertNotIn('request_cors',
+                                 policy.to_dict(request_cors=False))
+
     def test_to_dict_partial(self):
         ref_lb = data_models.LoadBalancer(loadbalancer_id=self.loadbalancer_id)
         ref_lb_dict = {'loadbalancer_id': self.loadbalancer_id}
