@@ -34,6 +34,7 @@ class ProviderDriver():
     # Send HTTP/2 prior knowledge on cleartext HTTP pool member connections.
     supports_backend_h2c = False
     supports_backend_tls_hostname = False
+    supports_tcp_tls_termination = False
 
     # Load Balancer
     def create_vip_port(self, loadbalancer_id, project_id, vip_dictionary,

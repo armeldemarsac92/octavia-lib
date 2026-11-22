@@ -30,6 +30,18 @@ class TestProviderDataModels(base.TestCase):
             self.assertEqual(fields,
                              data_models.Pool.from_dict(fields).to_dict())
 
+    def test_listener_tcp_tls_termination(self):
+        self.assertNotIn('tcp_tls_termination',
+                         data_models.Listener().to_dict())
+        fields = {'tcp_tls_termination': True}
+        self.assertEqual(fields,
+                         data_models.Listener.from_dict(fields).to_dict())
+        # Existing positional callers pass HTTPS hosts as argument 35.
+        hosts = ['example.test']
+        listener = data_models.Listener(*([data_models.Unset] * 34), hosts)
+        self.assertEqual(hosts, listener.https_virtual_hosts)
+        self.assertIs(data_models.Unset, listener.tcp_tls_termination)
+
     def test_pool_backend_tls_hostname_update(self):
         self.assertNotIn('backend_tls_hostname', data_models.Pool().to_dict())
         for value in ('backend.example.test', None):
@@ -541,6 +553,7 @@ class TestProviderDataModels(base.TestCase):
         ref_lb_dict_with_listener['additional_vips'] = None
         listener = ref_lb_dict_with_listener['listeners'][0]
         listener['default_http_response'] = None
+        listener['tcp_tls_termination'] = None
         listener['l7policies'][0]['fixed_response'] = None
 
         ref_lb_converted_to_dict = ref_lb.to_dict(recurse=True,
