@@ -499,6 +499,19 @@ class TestProviderDataModels(base.TestCase):
         self.assertNotIn('redirect_request', data_models.L7Policy().to_dict(
             render_unsets=True))
 
+    def test_l7policy_request_url_rewrite_round_trip(self):
+        field = 'request_url_rewrite'
+        for value in (None, {
+                'hostname': 'next.example',
+                'replace_prefix': {'match': '/old', 'replacement': ''}}):
+            with self.subTest(value=value):
+                fields = {field: value}
+                policy = data_models.L7Policy.from_dict(fields)
+                self.assertEqual(fields, policy.to_dict())
+                self.assertEqual(fields, policy.to_dict(recurse=True))
+        self.assertNotIn(field, data_models.L7Policy().to_dict(
+            render_unsets=True))
+
     def test_to_dict_partial(self):
         ref_lb = data_models.LoadBalancer(loadbalancer_id=self.loadbalancer_id)
         ref_lb_dict = {'loadbalancer_id': self.loadbalancer_id}
