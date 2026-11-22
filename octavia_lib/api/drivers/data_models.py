@@ -216,7 +216,7 @@ class Pool(BaseDataModel):
                  crl_container_data=Unset, tls_enabled=Unset,
                  project_id=Unset, tls_versions=Unset, tls_ciphers=Unset,
                  alpn_protocols=Unset, backend_h2c=Unset,
-                 backend_tls_hostname=Unset):
+                 backend_tls_hostname=Unset, backend_tls_require_h2=Unset):
 
         self.admin_state_up = admin_state_up
         self.description = description
@@ -242,6 +242,7 @@ class Pool(BaseDataModel):
         self.alpn_protocols = alpn_protocols
         self.backend_h2c = backend_h2c
         self.backend_tls_hostname = backend_tls_hostname
+        self.backend_tls_require_h2 = backend_tls_require_h2
 
     def __str__(self):
         return (f"Pool(loadbalancer_id={self.loadbalancer_id!r}, "
