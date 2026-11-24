@@ -38,6 +38,20 @@ class TestProviderDataModels(base.TestCase):
             self.assertEqual(fields,
                              data_models.Pool.from_dict(fields).to_dict())
 
+    def test_pool_backend_tls_subject_alt_names_update(self):
+        field = 'backend_tls_subject_alt_names'
+        self.assertNotIn(field, data_models.Pool().to_dict())
+        identities = [
+            {'type': 'Hostname', 'hostname': 'id.example.test'},
+            {'type': 'URI', 'uri': 'spiffe://id.example.test/workload%2fa'},
+        ]
+        for value in (identities, []):
+            with self.subTest(value=value):
+                fields = {field: value}
+                pool = data_models.Pool.from_dict(fields)
+                self.assertEqual(fields, pool.to_dict())
+                self.assertEqual(fields, pool.to_dict(recurse=True))
+
     def test_listener_tcp_tls_termination(self):
         self.assertNotIn('tcp_tls_termination',
                          data_models.Listener().to_dict())

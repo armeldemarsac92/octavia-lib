@@ -216,7 +216,8 @@ class Pool(BaseDataModel):
                  crl_container_data=Unset, tls_enabled=Unset,
                  project_id=Unset, tls_versions=Unset, tls_ciphers=Unset,
                  alpn_protocols=Unset, backend_h2c=Unset,
-                 backend_tls_hostname=Unset, backend_tls_require_h2=Unset):
+                 backend_tls_hostname=Unset, backend_tls_require_h2=Unset,
+                 backend_tls_subject_alt_names=Unset):
 
         self.admin_state_up = admin_state_up
         self.description = description
@@ -243,6 +244,18 @@ class Pool(BaseDataModel):
         self.backend_h2c = backend_h2c
         self.backend_tls_hostname = backend_tls_hostname
         self.backend_tls_require_h2 = backend_tls_require_h2
+        self.backend_tls_subject_alt_names = backend_tls_subject_alt_names
+
+    def to_dict(self, calling_classes=None, recurse=False, render_unsets=False,
+                **kwargs):
+        data = super().to_dict(calling_classes=calling_classes,
+                               recurse=recurse, render_unsets=render_unsets,
+                               **kwargs)
+        if (not isinstance(self.backend_tls_subject_alt_names, UnsetType) and
+                kwargs.get('backend_tls_subject_alt_names', True)):
+            data['backend_tls_subject_alt_names'] = (
+                self.backend_tls_subject_alt_names)
+        return data
 
     def __str__(self):
         return (f"Pool(loadbalancer_id={self.loadbalancer_id!r}, "
