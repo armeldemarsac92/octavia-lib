@@ -64,6 +64,16 @@ class TestProviderDataModels(base.TestCase):
         self.assertEqual(hosts, listener.https_virtual_hosts)
         self.assertIs(data_models.Unset, listener.tcp_tls_termination)
 
+    def test_listener_frontend_client_auth_fallback_update(self):
+        field = 'client_authentication_insecure_fallback'
+        listener = data_models.Listener()
+        self.assertNotIn(field, listener.to_dict())
+        self.assertNotIn(field, listener.to_dict(render_unsets=True))
+        for value in (True, False):
+            fields = {field: value}
+            actual = data_models.Listener.from_dict(fields).to_dict()
+            self.assertEqual(fields, actual)
+
     def test_pool_backend_tls_hostname_update(self):
         self.assertNotIn('backend_tls_hostname', data_models.Pool().to_dict())
         for value in ('backend.example.test', None):

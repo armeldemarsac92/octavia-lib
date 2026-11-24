@@ -148,7 +148,8 @@ class Listener(BaseDataModel):
                  alpn_protocols=Unset, hsts_max_age=Unset,
                  hsts_include_subdomains=Unset, hsts_preload=Unset,
                  default_http_response=Unset, https_virtual_hosts=Unset,
-                 tcp_tls_termination=Unset):
+                 tcp_tls_termination=Unset,
+                 client_authentication_insecure_fallback=Unset):
 
         self.admin_state_up = admin_state_up
         self.connection_limit = connection_limit
@@ -176,6 +177,8 @@ class Listener(BaseDataModel):
         self.client_ca_tls_container_ref = client_ca_tls_container_ref
         self.client_ca_tls_container_data = client_ca_tls_container_data
         self.client_authentication = client_authentication
+        self.client_authentication_insecure_fallback = (
+            client_authentication_insecure_fallback)
         self.client_crl_container_ref = client_crl_container_ref
         self.client_crl_container_data = client_crl_container_data
         self.project_id = project_id
@@ -197,6 +200,8 @@ class Listener(BaseDataModel):
             data.pop('https_virtual_hosts', None)
         elif kwargs.get('https_virtual_hosts', True):
             data['https_virtual_hosts'] = self.https_virtual_hosts
+        if isinstance(self.client_authentication_insecure_fallback, UnsetType):
+            data.pop('client_authentication_insecure_fallback', None)
         return data
 
     def __str__(self):
