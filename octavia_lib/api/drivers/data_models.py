@@ -149,7 +149,8 @@ class Listener(BaseDataModel):
                  hsts_include_subdomains=Unset, hsts_preload=Unset,
                  default_http_response=Unset, https_virtual_hosts=Unset,
                  tcp_tls_termination=Unset,
-                 client_authentication_insecure_fallback=Unset):
+                 client_authentication_insecure_fallback=Unset,
+                 tcp_tls_mixed_mode=Unset):
 
         self.admin_state_up = admin_state_up
         self.connection_limit = connection_limit
@@ -160,6 +161,7 @@ class Listener(BaseDataModel):
         self.default_tls_container_data = default_tls_container_data
         self.default_tls_container_ref = default_tls_container_ref
         self.tcp_tls_termination = tcp_tls_termination
+        self.tcp_tls_mixed_mode = tcp_tls_mixed_mode
         self.description = description
         self.insert_headers = insert_headers
         self.l7policies = l7policies
@@ -335,7 +337,8 @@ class L7Policy(BaseDataModel):
                  targets=Unset, request_header_operations=Unset,
                  https_listener_hostname=Unset,
                  response_header_operations=Unset, redirect_request=Unset,
-                 request_url_rewrite=Unset, request_cors=Unset):
+                 request_url_rewrite=Unset, request_cors=Unset,
+                 tcp_tls_passthrough=Unset):
 
         self.action = action
         self.fixed_response = fixed_response
@@ -343,6 +346,7 @@ class L7Policy(BaseDataModel):
         self.request_header_operations = request_header_operations
         self.response_header_operations = response_header_operations
         self.https_listener_hostname = https_listener_hostname
+        self.tcp_tls_passthrough = tcp_tls_passthrough
         self.admin_state_up = admin_state_up
         self.description = description
         self.l7policy_id = l7policy_id

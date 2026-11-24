@@ -64,6 +64,14 @@ class TestProviderDataModels(base.TestCase):
         self.assertEqual(hosts, listener.https_virtual_hosts)
         self.assertIs(data_models.Unset, listener.tcp_tls_termination)
 
+    def test_tcp_tls_mixed_mode_round_trip(self):
+        for model, field in (
+                (data_models.Listener, 'tcp_tls_mixed_mode'),
+                (data_models.L7Policy, 'tcp_tls_passthrough')):
+            self.assertNotIn(field, model().to_dict())
+            self.assertEqual({field: True},
+                             model.from_dict({field: True}).to_dict())
+
     def test_listener_frontend_client_auth_fallback_update(self):
         field = 'client_authentication_insecure_fallback'
         listener = data_models.Listener()
@@ -627,7 +635,9 @@ class TestProviderDataModels(base.TestCase):
         listener = ref_lb_dict_with_listener['listeners'][0]
         listener['default_http_response'] = None
         listener['tcp_tls_termination'] = None
+        listener['tcp_tls_mixed_mode'] = None
         listener['l7policies'][0]['fixed_response'] = None
+        listener['l7policies'][0]['tcp_tls_passthrough'] = None
 
         ref_lb_converted_to_dict = ref_lb.to_dict(recurse=True,
                                                   render_unsets=True)
