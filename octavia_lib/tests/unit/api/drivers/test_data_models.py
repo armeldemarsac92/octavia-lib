@@ -106,6 +106,14 @@ class TestProviderDataModels(base.TestCase):
             self.assertEqual(fields, listener.to_dict())
             self.assertEqual(fields, listener.to_dict(recurse=True))
 
+    def test_pool_backend_tls_system_ca_update(self):
+        field = 'backend_tls_system_ca'
+        self.assertNotIn(field, data_models.Pool().to_dict())
+        for enabled in (True, False):
+            options = {field: enabled}
+            self.assertEqual(options,
+                             data_models.Pool.from_dict(options).to_dict())
+
     def test_pool_backend_tls_hostname_update(self):
         self.assertNotIn('backend_tls_hostname', data_models.Pool().to_dict())
         for value in ('backend.example.test', None):
