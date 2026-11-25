@@ -339,7 +339,7 @@ class L7Policy(BaseDataModel):
                  response_header_operations=Unset, redirect_request=Unset,
                  request_url_rewrite=Unset, request_cors=Unset,
                  tcp_tls_passthrough=Unset,
-                 http_request_policy=Unset):
+                 http_request_policy=Unset, request_mirrors=Unset):
 
         self.action = action
         self.fixed_response = fixed_response
@@ -362,6 +362,7 @@ class L7Policy(BaseDataModel):
         self.request_url_rewrite = request_url_rewrite
         self.request_cors = request_cors
         self.http_request_policy = http_request_policy
+        self.request_mirrors = request_mirrors
         self.redirect_http_code = redirect_http_code
         self.project_id = project_id
 
@@ -375,7 +376,7 @@ class L7Policy(BaseDataModel):
                           'response_header_operations',
                           'https_listener_hostname', 'redirect_request',
                           'request_url_rewrite', 'request_cors',
-                          'http_request_policy'):
+                          'http_request_policy', 'request_mirrors'):
             value = getattr(self, attribute)
             if isinstance(value, UnsetType):
                 data.pop(attribute, None)
