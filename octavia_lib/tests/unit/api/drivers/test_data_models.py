@@ -579,6 +579,19 @@ class TestProviderDataModels(base.TestCase):
                 self.assertEqual(payload, policy.to_dict())
                 self.assertEqual(payload, policy.to_dict(recurse=True))
 
+    def test_l7policy_request_mirrors_preserve_order_and_clearing(self):
+        field = 'request_mirrors'
+        self.assertNotIn(field, data_models.L7Policy().to_dict(
+            render_unsets=True))
+        mirror = dict(pool_id='a', numerator=1, denominator=4,
+                      phase='before_transforms')
+        targets = [dict(pool_id='b', weight=2, request_mirrors=[mirror])]
+        for mirrors in (None, [], [mirror, mirror]):
+            payload = {field: mirrors, 'targets': targets}
+            policy = data_models.L7Policy.from_dict(payload)
+            self.assertEqual(payload, policy.to_dict())
+            self.assertEqual(payload, policy.to_dict(recurse=True))
+
     def test_to_dict_partial(self):
         ref_lb = data_models.LoadBalancer(loadbalancer_id=self.loadbalancer_id)
         ref_lb_dict = {'loadbalancer_id': self.loadbalancer_id}
