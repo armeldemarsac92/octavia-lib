@@ -38,6 +38,7 @@ class ProviderDriver():
     # Send HTTP/2 prior knowledge on cleartext HTTP pool member connections.
     supports_backend_h2c = False
     supports_backend_tls_hostname = False
+    supports_backend_tls_system_ca = False
     supports_backend_tls_h2_alpn = False
     supports_backend_tls_subject_alt_names = False
     supports_tcp_tls_termination = False

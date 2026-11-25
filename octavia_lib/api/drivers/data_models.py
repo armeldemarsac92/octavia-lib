@@ -234,7 +234,7 @@ class Pool(BaseDataModel):
                  alpn_protocols=Unset, backend_h2c=Unset,
                  backend_tls_hostname=Unset, backend_tls_require_h2=Unset,
                  backend_tls_subject_alt_names=Unset,
-                 backend_retry_budget=Unset):
+                 backend_retry_budget=Unset, *, backend_tls_system_ca=Unset):
 
         self.admin_state_up = admin_state_up
         self.description = description
@@ -260,6 +260,7 @@ class Pool(BaseDataModel):
         self.alpn_protocols = alpn_protocols
         self.backend_h2c = backend_h2c
         self.backend_tls_hostname = backend_tls_hostname
+        self.backend_tls_system_ca = backend_tls_system_ca
         self.backend_tls_require_h2 = backend_tls_require_h2
         self.backend_tls_subject_alt_names = backend_tls_subject_alt_names
         self.backend_retry_budget = backend_retry_budget
