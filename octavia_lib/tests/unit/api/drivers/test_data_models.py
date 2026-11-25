@@ -624,6 +624,19 @@ class TestProviderDataModels(base.TestCase):
                 self.assertEqual(payload, policy.to_dict())
                 self.assertEqual(payload, policy.to_dict(recurse=True))
 
+    def test_l7policy_external_auth_distinguishes_omission_and_removal(self):
+        field = 'external_auth'
+        self.assertNotIn(field, data_models.L7Policy().to_dict(
+            render_unsets=True))
+        auth = {'pool_id': 'auth-pool', 'path_prefix': '/check',
+                'allowed_request_headers': ['x-team'],
+                'allowed_response_headers': ['x-identity']}
+        for value in (None, auth):
+            payload = {field: value}
+            policy = data_models.L7Policy.from_dict(payload)
+            self.assertEqual(payload, policy.to_dict())
+            self.assertEqual(payload, policy.to_dict(recurse=True))
+
     def test_l7policy_request_mirrors_preserve_order_and_clearing(self):
         field = 'request_mirrors'
         self.assertNotIn(field, data_models.L7Policy().to_dict(
