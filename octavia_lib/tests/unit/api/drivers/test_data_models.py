@@ -566,6 +566,19 @@ class TestProviderDataModels(base.TestCase):
                 self.assertNotIn('request_cors',
                                  policy.to_dict(request_cors=False))
 
+    def test_l7policy_http_request_policy_preserves_json(self):
+        field = 'http_request_policy'
+        self.assertNotIn(field, data_models.L7Policy().to_dict(
+            render_unsets=True))
+        for value in (None, {}, {'request_timeout_ms': 0, 'retry': {}},
+                      {'backend_request_timeout_ms': 500,
+                       'retry': {'attempts': 0, 'codes': [500, 504]}}):
+            with self.subTest(value=value):
+                payload = {field: value}
+                policy = data_models.L7Policy.from_dict(payload)
+                self.assertEqual(payload, policy.to_dict())
+                self.assertEqual(payload, policy.to_dict(recurse=True))
+
     def test_to_dict_partial(self):
         ref_lb = data_models.LoadBalancer(loadbalancer_id=self.loadbalancer_id)
         ref_lb_dict = {'loadbalancer_id': self.loadbalancer_id}
