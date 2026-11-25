@@ -578,6 +578,19 @@ class TestProviderDataModels(base.TestCase):
                 self.assertNotIn('request_cors',
                                  policy.to_dict(request_cors=False))
 
+    def test_pool_backend_retry_budget_preserves_omission_and_clearing(self):
+        field = 'backend_retry_budget'
+        budget = dict(service_uid='service-uid', budget_percent=20,
+                      budget_interval_ms=10000, min_retry_count=10,
+                      min_retry_interval_ms=1000)
+        self.assertNotIn(field, data_models.Pool().to_dict())
+        for value in (budget, None):
+            with self.subTest(value=value):
+                original = {field: value}
+                pool = data_models.Pool.from_dict(original)
+                self.assertEqual(original, pool.to_dict())
+                self.assertEqual(original, pool.to_dict(recurse=True))
+
     def test_l7policy_http_request_policy_preserves_json(self):
         field = 'http_request_policy'
         self.assertNotIn(field, data_models.L7Policy().to_dict(
