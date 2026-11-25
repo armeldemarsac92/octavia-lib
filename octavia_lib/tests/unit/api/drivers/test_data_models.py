@@ -94,6 +94,18 @@ class TestProviderDataModels(base.TestCase):
             self.assertEqual(fields, listener.to_dict())
             self.assertEqual(fields, listener.to_dict(recurse=True))
 
+    def test_listener_otlp_tracing_preserves_omission_and_clear(self):
+        field = 'otlp_tracing'
+        self.assertNotIn(
+            field, data_models.Listener().to_dict(render_unsets=True))
+        tracing = dict(collector_pool_id='pool', service_name='gateway',
+                       span_name='Gateway HTTP')
+        for value in (tracing, None):
+            fields = {field: value}
+            listener = data_models.Listener.from_dict(fields)
+            self.assertEqual(fields, listener.to_dict())
+            self.assertEqual(fields, listener.to_dict(recurse=True))
+
     def test_pool_backend_tls_hostname_update(self):
         self.assertNotIn('backend_tls_hostname', data_models.Pool().to_dict())
         for value in ('backend.example.test', None):

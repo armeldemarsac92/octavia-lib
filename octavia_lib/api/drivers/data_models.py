@@ -150,7 +150,8 @@ class Listener(BaseDataModel):
                  default_http_response=Unset, https_virtual_hosts=Unset,
                  tcp_tls_termination=Unset,
                  client_authentication_insecure_fallback=Unset,
-                 tcp_tls_mixed_mode=Unset, request_filter_sections=Unset):
+                 tcp_tls_mixed_mode=Unset, request_filter_sections=Unset,
+                 otlp_tracing=Unset):
 
         self.admin_state_up = admin_state_up
         self.connection_limit = connection_limit
@@ -159,6 +160,7 @@ class Listener(BaseDataModel):
         self.default_http_response = default_http_response
         self.https_virtual_hosts = https_virtual_hosts
         self.request_filter_sections = request_filter_sections
+        self.otlp_tracing = otlp_tracing
         self.default_tls_container_data = default_tls_container_data
         self.default_tls_container_ref = default_tls_container_ref
         self.tcp_tls_termination = tcp_tls_termination
@@ -207,6 +209,8 @@ class Listener(BaseDataModel):
             data.pop('request_filter_sections', None)
         elif kwargs.get('request_filter_sections', True):
             data['request_filter_sections'] = self.request_filter_sections
+        if isinstance(self.otlp_tracing, UnsetType):
+            data.pop('otlp_tracing', None)
         if isinstance(self.client_authentication_insecure_fallback, UnsetType):
             data.pop('client_authentication_insecure_fallback', None)
         return data
