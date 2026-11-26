@@ -43,6 +43,7 @@ class ProviderDriver():
     supports_backend_tls_subject_alt_names = False
     supports_tcp_tls_termination = False
     supports_tcp_default_pool_tls = False
+    supports_tcp_weighted_default_pools = False
 
     # Load Balancer
     def create_vip_port(self, loadbalancer_id, project_id, vip_dictionary,
